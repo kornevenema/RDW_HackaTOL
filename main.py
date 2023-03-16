@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 import pika
+import pandas as pd
+from sodapy import Socrata
+
+client = Socrata("opendata.rdw.nl", None)
 
 credentials = pika.PlainCredentials("reader", "reader")
 connection = pika.BlockingConnection(
@@ -23,3 +27,5 @@ channel.basic_consume(
     queue=queue_name, on_message_callback=callback, auto_ack=True)
 
 channel.start_consuming()
+
+results = client.get("m9d7-ebf2", limit=1, where="kenteken='0001TV'")
